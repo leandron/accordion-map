@@ -1,4 +1,4 @@
-accordion-map
-=============
+diatonic-accordion-map
+======================
 
-This is an interactive reference map for diatonic accordion chords (in portuguese)
+Diatonic Accordion Map is a set of code (HTML, Javascript and CSS Styles) to simplify the understanding of Diatonic Accordion tones and chords.
