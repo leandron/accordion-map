@@ -28,25 +28,59 @@ CLOSE = 1;
 /* [chord_name, 'complement', OPEN/CLOSE, [[row,key],[row,key]...], 'obs'] */
 
 chords = [
-    [C, 'M', [
-        [CLOSE, [[1,2],[1,3],[1,4]]],
-        [CLOSE, [[1,5],[1,6],[1,7]]],
-        [OPEN, [[2,3],[2,4],[1,4]]],
-        [OPEN, [[2,7],[2,8],[1,8]]],
+    [C, '', [
+        [CLOSE, [[1,2],[1,3],[1,4]],''],
+        [CLOSE, [[1,5],[1,6],[1,7]],''],
+        [OPEN, [[2,3],[2,4],[1,4]],''],
+        [OPEN, [[2,7],[2,8],[1,8]],''],
         ]
     ],
-    [D, 'M', [
-        [OPEN, [[2,0],[2,1],[2,2],[1,2]]],
-        [OPEN, [[2,5],[2,6],[1,6]]],
-        [OPEN, [[2,9],[2,10]]],
+    [D, '', [
+        [OPEN, [[2,0],[2,1],[2,2]],''],
+        [OPEN, [[1,2],[2,6],[2,7]],''],
+        [OPEN, [[1,6],[2,9],[2,10]],''],
         ]
     ],
     [D, 'm', [
-        [OPEN, [[2,2],[1,2],[1,3]]],
-        [OPEN, [[2,6],[1,6],[1,7]]],
+        [OPEN, [[1,2],[1,3],[2,6]],''],
+        [OPEN, [[1,6],[1,7],[2,10]],''],
         ]
-    ]
+    ],
+    [E, '7', [
+        [CLOSE, [[2,3],[1,3],[2,4]],''],
+        [CLOSE, [[2,6],[1,6],[2,7]],''],
+        [CLOSE, [[2,9],[1,9],[2,10]],''],
+        ]
+    ],
 ];
+
+function set_chord(chord_no, var_no) {
+    console.log("chord " + chord_no);
+    console.log("var " + var_no);
+}
+
+function create_chord_items(my_div) {
+    var c_symbol = 0;
+    var c_complement = 1;
+    var c_variations = 2;
+
+    // high level chords
+    for (var c=0; c < chords.length; c++) {
+        chord_initial_label = tone_labels[chords[c][c_symbol]] + chords[c][1];
+        chord_tag = "<div id=\"chord_item\">";
+        chord_tag += "<p id=\"chord" + c + "\" class=\"chord_label\"> " + chord_initial_label + " </p>";
+
+        //variations of the chord
+        for (var v=0; v < chords[c][c_variations].length; v++) {
+            chord_tag += "<a id=\"chord" + c + "_" + v + "\" class=\"chord_var_";
+            chord_tag += chords[c][c_variations][v][0] == OPEN ? "open" : "close";
+            chord_tag += "\" onclick=\"set_chord(" + c + "," + v + ")\"> " + v + " </a>";
+        }
+
+        chord_tag += "</div>";
+        $("#" + my_div).append(chord_tag);
+    }
+}
 
 
 function fill_row(my_div, max_buttons) {

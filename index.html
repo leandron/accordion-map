@@ -12,13 +12,13 @@
 <h1>Mapa do Acordeon Diatônico</h1>
 
 <div id="introducao">
-Este é um mapa de referência para o acordeon diatônico tocado no sul do Brasil.
+Este é um mapa de referência para o acordeon diatônico brasileiro.
 </div>
 
 <div id="conteiner">
 
     <hr/>
-    <h2>Botões</h2>
+    <h2>Mapa do Teclado</h2>
 
     <div id="menu">
         <button id="add_half_tone">+ meio tom</button>
@@ -41,11 +41,13 @@ Este é um mapa de referência para o acordeon diatônico tocado no sul do Brasi
 
     <hr/>
     <h2>Acordes</h2>
-
+    <div id="chord_items">
+    
+    </div>
     <div>
     </div>
     <hr/>
-    (c) 2013 Leandro Nunes - <a href="http://leandron.wordpress.com">leandron.wordpress.com</a> - <a href="http://twitter.com/nunesleandro">@nunesleandro</a>
+    (c) 2013 Leandro Nunes - <a href="http://leandron.wordpress.com">leandron.wordpress.com</a> - <a href="http://twitter.com/nunesleandro">@nunesleandro</a><br/>Material disponibilizado nos termos da licença Creative-Commons.
 </div>
 
 <script type="text/javascript">
@@ -57,6 +59,7 @@ $('document').ready(function() {
     fill_row('row_1', 10);
     fill_row('row_2', 11);
     set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
+    create_chord_items('chord_items');
 });
 
 $('#add_half_tone').click(function() {

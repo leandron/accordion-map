@@ -43,3 +43,11 @@
     width: 52px;
     color: blue;
 }
+
+.chord_var_open {
+    color: blue;
+}
+
+.chord_var_close {
+    color: red;
+}
