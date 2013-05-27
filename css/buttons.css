@@ -1,0 +1,53 @@
+
+.acc_keyboard {
+}
+
+.acc_row {
+    width: 740px;
+    text-align: center;
+}
+
+.acc_button {
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    background-image: url('../img/button_bg.png');
+    margin: 2px;
+    position: relative;
+    font-family: Arial;
+    font-size: 18px;
+}
+
+.acc_highlight_up {
+    background-image: url('../img/button_bg_high_up.png');
+}
+
+.acc_highlight_down {
+    background-image: url('../img/button_bg_high_down.png');
+}
+
+.acc_label_up {
+    position: absolute;
+    text-align: center;
+    top: -10;
+    left: 4;
+    width: 52px;
+    color: red;
+}
+
+.acc_label_down {
+    position: absolute;
+    text-align: center;
+    top: 16;
+    left: 4;
+    width: 52px;
+    color: blue;
+}
+
+.chord_var_open {
+    color: blue;
+}
+
+.chord_var_close {
+    color: red;
+}

@@ -1,0 +1,83 @@
+<html>
+<head>
+    <title>Mapa do Acordeon Diatônico</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/buttons.js"></script>
+    <link rel="stylesheet" href="css/buttons.css" />
+
+</head>
+<body>
+
+<h1>Mapa do Acordeon Diatônico</h1>
+
+<div id="introducao">
+Este é um mapa de referência para o acordeon diatônico brasileiro.
+</div>
+
+<div id="conteiner">
+
+    <hr/>
+    <h2>Mapa do Teclado</h2>
+
+    <div id="menu">
+        <button id="add_half_tone">+ meio tom</button>
+        <button id="sub_half_tone">- meio tom</button>
+        <button id="change_labels">Mudar símbolos</button>
+	<br/><br/>
+    </div>
+
+    <div id="acc_keyboard">
+
+        <div id="row_0" class="acc_row">
+
+        </div>
+
+        <div id="row_1" class="acc_row"> 
+
+        </div>
+
+    </div>
+
+    <hr/>
+    <h2>Acordes</h2>
+    <div id="chord_items">
+    
+    </div>
+    <div>
+    </div>
+    <hr/>
+    (c) 2013 Leandro Nunes - <a href="http://leandron.wordpress.com">leandron.wordpress.com</a> - <a href="http://twitter.com/nunesleandro">@nunesleandro</a><br/>Material disponibilizado nos termos da licença Creative-Commons.
+</div>
+
+<script type="text/javascript">
+
+var current_tone_adjust = 60; // G
+var tone_labels = int_tone;
+
+$('document').ready(function() {
+    fill_row('row_0', 10);
+    fill_row('row_1', 11);
+    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
+    create_chord_items('chord_items');
+});
+
+$('#add_half_tone').click(function() {
+    current_tone_adjust++;
+    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
+});
+
+$('#sub_half_tone').click(function() {
+    current_tone_adjust--;
+    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
+});
+
+$('#change_labels').click(function() {
+    tone_labels = (tone_labels == int_tone)? br_tone : int_tone;
+    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
+});
+
+</script>
+
+</body>
+</html>
