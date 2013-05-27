@@ -1,5 +1,6 @@
 
 .acc_keyboard {
+    float: right;
 }
 
 .acc_row {
@@ -44,10 +45,33 @@
     color: blue;
 }
 
+.chord_item {
+    display: inline-block;
+    margin: 2px;
+    padding: 1px;
+    border: 1px solid black;
+    width: 160px;
+    text-align: center;
+}
+
+.chord_label {
+    font-size: 30px;
+}
+
+.chord_var {
+    display: inline-block;
+    font-size: 20px;
+    background-color: gray;
+    padding: 10px;
+    margin: 1px;
+}
+
 .chord_var_open {
+    vertical-align: middle;
     color: blue;
 }
 
 .chord_var_close {
+    vertical-align: middle;
     color: red;
 }

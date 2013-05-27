@@ -23,7 +23,9 @@ HOHNER_GC = [HOHNER_GC_OPEN, HOHNER_GC_CLOSE]
 OPEN = 0;
 CLOSE = 1;
 
+// chords array constants
 c_variations = 2;
+c_symbol = 0;
 
 /* chords */
 
@@ -110,20 +112,21 @@ function set_chord(chord_no, var_no) {
 }
 
 function create_chord_items(my_div) {
-    var c_symbol = 0;
     var c_complement = 1;
 
     // high level chords
     for (var c=0; c < chords.length; c++) {
         chord_initial_label = tone_labels[chords[c][c_symbol]] + chords[c][1];
-        chord_tag = "<div id=\"chord_item\">";
-        chord_tag += "<p id=\"chord" + c + "\" class=\"chord_label\"> " + chord_initial_label + " </p>";
+        chord_tag = "<div class=\"chord_item\">";
+        chord_tag += "<p id=\"chord_" + c + "\" class=\"chord_label\"> " + chord_initial_label + " </p>";
 
         //variations of the chord
         for (var v=0; v < chords[c][c_variations].length; v++) {
-            chord_tag += "<a id=\"chord" + c + "_" + v + "\" class=\"chord_var_";
+            chord_tag += "<div class=\"chord_var chord_var_";
             chord_tag += chords[c][c_variations][v][0] == OPEN ? "open" : "close";
-            chord_tag += "\" onclick=\"set_chord(" + c + "," + v + ")\"> " + v + " </a>";
+            chord_tag += "\" onclick=\"set_chord(" + c + "," + v + ")\" >";
+
+            chord_tag += " " + v + "</div>";
         }
 
         chord_tag += "</div>";
@@ -161,6 +164,10 @@ function set_button_label_down (row, button, label) {
     $("#row_" + row + "_btn_" + button + "_down").text(label);
 }
 
+function set_chord_label (c, label) {
+    $('#chord_' + c).text(label);
+}
+
 function set_tone(tones, tone_adjust, tone_labels) {
     up_row = 0;
     bottom_row = 1;
@@ -181,6 +188,12 @@ function set_tone(tones, tone_adjust, tone_labels) {
         
         set_button_label_up(1, i, tone_labels[up_label_idx]);
         set_button_label_down(1, i, tone_labels[bottom_label_idx]);
+    }
+
+    for (var c=0; c < chords.length; c++) {
+        tone_sym = (chords[c][c_symbol] + tone_adjust) % int_tone.length;
+        tone_complement = chords[c][1];
+        set_chord_label(c, tone_labels[tone_sym] + tone_complement);
     }
 
 }
