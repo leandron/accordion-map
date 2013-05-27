@@ -29,11 +29,11 @@ Este é um mapa de referência para o acordeon diatônico brasileiro.
 
     <div id="acc_keyboard">
 
-        <div id="row_1" class="acc_row">
+        <div id="row_0" class="acc_row">
 
         </div>
 
-        <div id="row_2" class="acc_row"> 
+        <div id="row_1" class="acc_row"> 
 
         </div>
 
@@ -52,12 +52,12 @@ Este é um mapa de referência para o acordeon diatônico brasileiro.
 
 <script type="text/javascript">
 
-var current_tone_adjust = 0;
+var current_tone_adjust = 60; // G
 var tone_labels = int_tone;
 
 $('document').ready(function() {
-    fill_row('row_1', 10);
-    fill_row('row_2', 11);
+    fill_row('row_0', 10);
+    fill_row('row_1', 11);
     set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
     create_chord_items('chord_items');
 });
