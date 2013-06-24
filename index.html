@@ -32,12 +32,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="brand" href="#">Mapa do Acordeon Diatônico</a>
+          <a class="brand" href="#inicio">Mapa do Acordeon Diatônico</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li><a href="#pra_que_serve">Pra que serve?</a></li>
-              <li><a href="#legenda">Legenda</a></li>
-              <li><a href="#sobre">Sobre</a></li>
+              <li><a href="#acordes">Acordes</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -47,6 +45,7 @@
     <div class="container">
 
         <div class="span12" style="text-align:center; height:250px; margin-top:30px">
+          <a name="inicio"></a>
             <img src="img/logo.png" />
         </div>
         <h3>Teclado</h3>
@@ -60,7 +59,14 @@
               <table class="table table-bordered">
                 <tr>
                   <td>Afinação</td><td><span class="label label-success" id="afinacao">G/C</span></td>
-                  <td>Acorde</td><td><span class="label label-success" id="acorde">nenhum</td>
+                  <td>Acorde</td>
+                  <td>
+                    <span class="label label-success" id="acorde">-- </span>
+                    <i id="abre_fole" class="icon-resize-full"></i>
+                    <i id="fecha_fole" class="icon-resize-small"></i>
+                    
+                    
+                  </td>
                 </tr>
               </table>
           </div>
@@ -69,7 +75,7 @@
         <div class="span12" id="teclado">
         </div>
 
-        <h3>Acordes</h3>
+        <h3><a name="acordes"></a>Acordes</h3>
         <table id="chords_table" class="table table-striped">
           <tr><td><strong>Acorde</strong></td><td><strong>Variação</strong></td></tr>
           
@@ -125,6 +131,53 @@
               });
         }
 
+        function mark_button_up (row, button) {
+            teclado[row][button].btn.setFill('yellow');
+            teclado[row][button].close.setFill('red');
+        }
+
+        function mark_button_down (row, button) {
+            teclado[row][button].btn.setFill('yellow');
+            teclado[row][button].open.setFill('red');
+        }
+
+        function set_chord(chord_no, var_no) {
+            clean_keyboard();
+            $('#acorde').text(labels_src[chords[chord_no][0]] + chords[chord_no][1]);
+            selected_chord = chord_no;
+            note_list = chords[chord_no][c_variations][var_no][1];
+
+            if (chords[chord_no][c_variations][var_no][0] == CLOSE) {
+                $('#abre_fole').hide();
+                $('#fecha_fole').show();
+                func_mark = mark_button_up;
+            } else {
+                $('#abre_fole').show();
+                $('#fecha_fole').hide();
+                func_mark = mark_button_down;
+            }
+
+            for (i=0; i < note_list.length; i++) {
+                func_mark(note_list[i][0], note_list[i][1]);
+            }
+            layer.draw();
+        }
+
+        function clean_keyboard() {
+          for (i=0; i < botoes_linha_0; i++) {
+              teclado[0][i].btn.setFill('white');
+              teclado[0][i].open.setFill('black');
+              teclado[0][i].close.setFill('black');
+
+              if ( i < botoes_linha_1 ) {
+                  teclado[1][i].btn.setFill('white');
+                  teclado[1][i].open.setFill('black');
+                  teclado[1][i].close.setFill('black');
+              }
+          }
+          layer.draw();
+        }
+
         function redraw_keyboard (tone_adjust) {
           for (i=0; i < botoes_linha_0; i++) {
               teclado[0][i].open.setText(labels_src[((HOHNER_GC_OPEN[0][i] + tone_adjust) % labels_src.length) ]);
@@ -142,6 +195,8 @@
               $('#chord_' + c).text(chord_lbl + chords[c][1]);
           }
 
+          $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
+
           // ajusta o label com a afinacao
           txt_label_afinacao1 = labels_src[((TOM1 + tone_adjust) % labels_src.length) ];
           txt_label_afinacao2 = labels_src[((TOM2 + tone_adjust) % labels_src.length) ];
@@ -158,9 +213,13 @@
                     chord_str += chords[c][2][v][0] == OPEN ? 'success"' : 'warning"';
                     chord_str += ' title="';
                     chord_str += chords[c][2][v][0] == OPEN ? 'Abrindo o fole' : 'Fechando o fole';
-                    chord_str += '"" onclick="set_chord(" + c + "," + v + ")" >';
+                    chord_str += '"" onclick="set_chord(' + c + ',' + v + ')" > ' + (v + 1) ;
 
-                    chord_str += " " + (v + 1) + "</button> ";
+                    chord_str += ' <i class="';
+                    chord_str += chords[c][2][v][0] == OPEN ? 'icon-resize-full' : 'icon-resize-small';
+                    chord_str += ' icon-white"></i>';
+
+                    chord_str += " </button> ";
                 }
 
                 chord_str += '</td></tr>';
@@ -176,6 +235,9 @@
         });
 
         var layer = new Kinetic.Layer();
+
+        $('#abre_fole').hide();
+        $('#fecha_fole').hide();
 
         var teclado = new Array();
         teclado = [new Array(botoes_linha_0), new Array(9)]

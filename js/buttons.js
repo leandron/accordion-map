@@ -33,52 +33,52 @@ c_symbol = 0;
 
 chords = [
     [C, '', [
-        [CLOSE, [[0,2],[0,3],[0,4]],''],
-        [CLOSE, [[0,5],[0,6],[0,7]],''],
-        [OPEN, [[1,3],[1,4],[0,4]],''],
-        [OPEN, [[1,7],[1,8],[0,8]],''],
+        [CLOSE, [[1,2],[1,3],[1,4]],''],
+        [CLOSE, [[1,5],[1,6],[1,7]],''],
+        [OPEN, [[0,3],[0,4],[1,4]],''],
+        [OPEN, [[0,7],[0,8],[1,8]],''],
         ]
     ],
     [D, '', [
-        [OPEN, [[1,0],[1,1],[1,2]],''],
-        [OPEN, [[0,2],[1,5],[1,6]],''],
-        [OPEN, [[0,6],[1,9],[1,10]],''],
+        [OPEN, [[0,0],[0,1],[0,2]],''],
+        [OPEN, [[1,2],[0,5],[0,6]],''],
+        [OPEN, [[1,6],[0,9],[0,10]],''],
         ]
     ],
     [D, 'm', [
-        [OPEN, [[0,2],[0,3],[1,6]],''],
-        [OPEN, [[0,6],[0,7],[1,10]],''],
+        [OPEN, [[1,2],[1,3],[0,6]],''],
+        [OPEN, [[1,6],[1,7],[0,10]],''],
         ]
     ],
     [E, '7', [
-        [CLOSE, [[0,3],[1,3],[1,4]],''],
-        [CLOSE, [[0,6],[1,6],[1,7]],''],
-        [CLOSE, [[0,9],[1,9],[1,10]],''],
+        [CLOSE, [[1,3],[0,3],[0,4]],''],
+        [CLOSE, [[1,6],[0,6],[0,7]],''],
+        [CLOSE, [[1,9],[0,9],[0,10]],''],
         ]
     ],
     [E, 'm', [
-        [CLOSE, [[0,3],[0,4],[1,6]],''],
-        [OPEN,  [[1,4],[0,4],[0,5]],''],
-        [CLOSE, [[0,6],[0,7],[1,8]],''],
-        [OPEN,  [[1,8],[0,8],[0,9]],''],
+        [CLOSE, [[1,3],[1,4],[0,6]],''],
+        [OPEN,  [[0,4],[1,4],[1,5]],''],
+        [CLOSE, [[1,6],[1,7],[0,8]],''],
+        [OPEN,  [[0,8],[1,8],[1,9]],''],
         ]
     ],
     [F, '', [
-        [OPEN,  [[1,2],[1,3],[0,3]],''],
-        [OPEN,  [[1,6],[1,7],[0,7]],''],
+        [OPEN,  [[0,2],[0,3],[1,3]],''],
+        [OPEN,  [[0,6],[0,7],[1,7]],''],
         ]
     ],
     [G, '', [
-        [OPEN,  [[0,0],[0,1],[0,2]],''],
-        [CLOSE, [[1,2],[1,3],[1,4]],''],
-        [OPEN,  [[0,4],[0,5],[0,6]],''],
-        [CLOSE, [[1,5],[1,6],[1,7]],''],
-        [CLOSE, [[1,8],[1,9],[1,10]],''],
+        [OPEN,  [[1,0],[1,1],[1,2]],''],
+        [CLOSE, [[0,2],[0,3],[0,4]],''],
+        [OPEN,  [[1,4],[1,5],[1,6]],''],
+        [CLOSE, [[0,5],[0,6],[0,7]],''],
+        [CLOSE, [[0,8],[0,9],[0,10]],''],
         ]
     ],
     [A, 'm', [
-        [OPEN,  [[1,2],[1,3],[1,4]],''],
-        [OPEN,  [[1,6],[1,7],[1,8]],''],
+        [OPEN,  [[0,2],[0,3],[0,4]],''],
+        [OPEN,  [[0,6],[0,7],[0,8]],''],
         ]
     ],
 ];
@@ -94,21 +94,6 @@ function clear_chords () {
         $("#row_1_btn_" + i).removeClass('acc_highlight_down');
     }
 
-}
-
-function set_chord(chord_no, var_no) {
-    clear_chords();
-    note_list = chords[chord_no][c_variations][var_no][1];
-
-    if (chords[chord_no][c_variations][var_no][0] == CLOSE) {
-        func_mark = mark_button_up;
-    } else {
-        func_mark = mark_button_down;
-    }
-
-    for (i=0; i < note_list.length; i++) {
-        func_mark(note_list[i][0], note_list[i][1]);
-    }
 }
 
 function create_chord_items(my_div) {
@@ -148,13 +133,7 @@ function get_button_obj (row, button_number) {
     return $("#row_" + row + "_btn_" + button);
 }
 
-function mark_button_up (row, button) {
-    $("#row_" + row + "_btn_" + button).addClass('acc_highlight_up');
-}
 
-function mark_button_down (row, button) {
-    $("#row_" + row + "_btn_" + button).addClass('acc_highlight_down');
-}
 
 function set_button_label_up (row, button, label) {
     $("#row_" + row + "_btn_" + button + "_up").text(label);
