@@ -101,6 +101,7 @@
         var botoes_linha_1 = 10;
         var TOM1 = G;
         var TOM2 = C;
+        var selected_chord = -1;
 
         $('#sub_half_tone').on('click', function () {
             current_tone_adjust--;
@@ -195,13 +196,14 @@
               $('#chord_' + c).text(chord_lbl + chords[c][1]);
           }
 
-          $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
-
           // ajusta o label com a afinacao
           txt_label_afinacao1 = labels_src[((TOM1 + tone_adjust) % labels_src.length) ];
           txt_label_afinacao2 = labels_src[((TOM2 + tone_adjust) % labels_src.length) ];
           $('#afinacao').text(txt_label_afinacao1 + '/' + txt_label_afinacao2);
 
+          if (selected_chord != -1) {
+              $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
+          }
         }
 
         function populate_chord_table() {
