@@ -16,8 +16,8 @@ br_tone = ['Dó', 'Dó#', 'Ré', 'Ré#', 'Mi', 'Fá', 'Fá#', 'Sol', 'Sol#', 'L�
 
 /* keymap */
 
-HOHNER_GC_OPEN =  [[G, B, D, F, G, B, D, F, G, B], [D, Fs, A, C, E, Fs, A, C, E, Fs, A]];
-HOHNER_GC_CLOSE = [[E, G, C, E, G, C, E, G, C, E], [B, D,  G, B, D, G,  B, D, G, B,  D]];
+HOHNER_GC_OPEN =  [[D, Fs, A, C, E, Fs, A, C, E, Fs, A], [G, B, D, F, G, B, D, F, G, B]];
+HOHNER_GC_CLOSE = [[B, D,  G, B, D, G,  B, D, G, B,  D], [E, G, C, E, G, C, E, G, C, E]];
 HOHNER_GC = [HOHNER_GC_OPEN, HOHNER_GC_CLOSE]
 
 OPEN = 0;

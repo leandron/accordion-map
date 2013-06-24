@@ -1,83 +1,243 @@
-<html>
-<head>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
     <title>Mapa do Acordeon Diatônico</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A reference map for diatonic accordion">
+    <meta name="author" content="Leandro Nunes">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="#">Mapa do Acordeon Diatônico</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#pra_que_serve">Pra que serve?</a></li>
+              <li><a href="#legenda">Legenda</a></li>
+              <li><a href="#sobre">Sobre</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+        <div class="span12" style="text-align:center; height:250px; margin-top:30px">
+            <img src="img/logo.png" />
+        </div>
+        <h3>Teclado</h3>
+        <div class="span12">
+          <div class="span6">
+              <button id="sub_half_tone" class="btn btn-success"><i class="icon-circle-arrow-down icon-white"></i> &frac12; tom</button>
+              <button id="add_half_tone" class="btn btn-success"><i class="icon-circle-arrow-up icon-white"></i> &frac12; tom</button>
+              <button id="change_labels" class="btn btn-success"><i class="icon-globe icon-white"></i> Mudar símbolos</button>
+          </div>
+          <div class="span4">
+              <table class="table table-bordered">
+                <tr>
+                  <td>Afinação</td><td><span class="label label-success" id="afinacao">G/C</span></td>
+                  <td>Acorde</td><td><span class="label label-success" id="acorde">nenhum</td>
+                </tr>
+              </table>
+          </div>
+        </div>
+
+        <div class="span12" id="teclado">
+        </div>
+
+        <h3>Acordes</h3>
+        <table id="chords_table" class="table table-striped">
+          <tr><td><strong>Acorde</strong></td><td><strong>Variação</strong></td></tr>
+          
+        </table>
+
+    </div> <!-- /container -->
+
+    <footer style="text-align:center">
+      <p>Desenvolvido por Leandro Nunes - <a href="http://twitter.com/nunesleandro">@nunesleandro</a>
+<br />Esta obra é distribuida sob uma Licença <a rel="license" href="http://creativecommons.org/licenses/by/3.0/br/deed.pt_BR">Creative Commons Atribuição 3.0 Brasil</a>.</p>
+    </footer>
+
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/kinetic-v4.5.4.min.js"></script>
     <script type="text/javascript" src="js/buttons.js"></script>
-    <link rel="stylesheet" href="css/buttons.css" />
 
-</head>
-<body>
+    <script type="text/javascript">
+        var tamanho_botao = 80;
+        var espaco_botao = 4;
+        var labels_src = int_tone;
+        var current_tone_adjust = 60;
+        var botoes_linha_0 = 11;
+        var botoes_linha_1 = 10;
+        var TOM1 = G;
+        var TOM2 = C;
 
-<h1>Mapa do Acordeon Diatônico</h1>
+        $('#sub_half_tone').on('click', function () {
+            current_tone_adjust--;
+            redraw_keyboard(current_tone_adjust);
+        });
 
-<div id="introducao">
-Este é um mapa de referência para o acordeon diatônico brasileiro.
-</div>
+        $('#change_labels').on('click', function () {
+            labels_src = labels_src == int_tone ? br_tone : int_tone;
+            redraw_keyboard(current_tone_adjust);
+        });
 
-<div id="conteiner">
+        $('#add_half_tone').on('click', function () {
+            current_tone_adjust++;
+            redraw_keyboard(current_tone_adjust);
+        });
 
-    <hr/>
-    <h2>Mapa do Teclado</h2>
+        function get_label(param_text, param_row, param_column, param_open_close, param_x, param_y) {
+            return new Kinetic.Text({
+                x: param_x - (tamanho_botao / 2),
+                y: param_y,
+                text: param_text,
+                fontSize: 30,
+                fontFamily: 'Arial',
+                id: 'l_' + param_row + '_' + param_column + '_' + param_open_close,
+                fill: 'black',
+                width: tamanho_botao,
+                align: 'center',
+              });
+        }
 
-    <div id="menu">
-        <button id="add_half_tone">+ meio tom</button>
-        <button id="sub_half_tone">- meio tom</button>
-        <button id="change_labels">Mudar símbolos</button>
-	<br/><br/>
-    </div>
+        function redraw_keyboard (tone_adjust) {
+          for (i=0; i < botoes_linha_0; i++) {
+              teclado[0][i].open.setText(labels_src[((HOHNER_GC_OPEN[0][i] + tone_adjust) % labels_src.length) ]);
+              teclado[0][i].close.setText(labels_src[((HOHNER_GC_CLOSE[0][i] + tone_adjust) % labels_src.length) ]);
 
-    <div id="acc_keyboard">
+              if ( i < botoes_linha_1 ) {
+                  teclado[1][i].open.setText(labels_src[((HOHNER_GC_OPEN[1][i] + tone_adjust) % labels_src.length) ]);
+                  teclado[1][i].close.setText(labels_src[((HOHNER_GC_CLOSE[1][i] + tone_adjust) % labels_src.length) ]);
+              }
+          }
+          layer.draw();
 
-        <div id="row_0" class="acc_row">
+          for (var c=0; c < chords.length; c++) {
+              chord_lbl = labels_src[((chords[c][0] + tone_adjust) % labels_src.length) ]
+              $('#chord_' + c).text(chord_lbl + chords[c][1]);
+          }
 
-        </div>
+          // ajusta o label com a afinacao
+          txt_label_afinacao1 = labels_src[((TOM1 + tone_adjust) % labels_src.length) ];
+          txt_label_afinacao2 = labels_src[((TOM2 + tone_adjust) % labels_src.length) ];
+          $('#afinacao').text(txt_label_afinacao1 + '/' + txt_label_afinacao2);
 
-        <div id="row_1" class="acc_row"> 
+        }
 
-        </div>
+        function populate_chord_table() {
+            for (var c=0; c < chords.length; c++) {
+                chord_str =  '<tr><td id="chord_'+ c +'">' + labels_src[chords[c][0]] + chords[c][1] + '</td><td>';
 
-    </div>
+                for (var v=0; v < chords[c][2].length; v++) {
+                    chord_str += '<button class="btn btn-';
+                    chord_str += chords[c][2][v][0] == OPEN ? 'success"' : 'warning"';
+                    chord_str += ' title="';
+                    chord_str += chords[c][2][v][0] == OPEN ? 'Abrindo o fole' : 'Fechando o fole';
+                    chord_str += '"" onclick="set_chord(" + c + "," + v + ")" >';
 
-    <hr/>
-    <h2>Acordes</h2>
-    <div id="chord_items">
-    
-    </div>
-    <div>
-    </div>
-    <hr/>
-    (c) 2013 Leandro Nunes - <a href="http://leandron.wordpress.com">leandron.wordpress.com</a> - <a href="http://twitter.com/nunesleandro">@nunesleandro</a><br/>Material disponibilizado nos termos da licença Creative-Commons.
-</div>
+                    chord_str += " " + (v + 1) + "</button> ";
+                }
 
-<script type="text/javascript">
+                chord_str += '</td></tr>';
 
-var current_tone_adjust = 60; // G
-var tone_labels = int_tone;
+                $('#chords_table').append(chord_str);
+            }
+        }
 
-$('document').ready(function() {
-    fill_row('row_0', 10);
-    fill_row('row_1', 11);
-    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
-    create_chord_items('chord_items');
-});
+        var stage = new Kinetic.Stage({
+          container: 'teclado',
+          width: ((botoes_linha_0 * tamanho_botao) + (9 * espaco_botao)) + 10,
+          height: ((2 * tamanho_botao) + espaco_botao) + 10
+        });
 
-$('#add_half_tone').click(function() {
-    current_tone_adjust++;
-    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
-});
+        var layer = new Kinetic.Layer();
 
-$('#sub_half_tone').click(function() {
-    current_tone_adjust--;
-    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
-});
+        var teclado = new Array();
+        teclado = [new Array(botoes_linha_0), new Array(9)]
 
-$('#change_labels').click(function() {
-    tone_labels = (tone_labels == int_tone)? br_tone : int_tone;
-    set_tone(HOHNER_GC, current_tone_adjust, tone_labels);
-});
+        var espaco = 0;
+        for (i=0; i<botoes_linha_0; i++) {
+            var circle = new Kinetic.Circle({
+              x: 1 + (tamanho_botao / 2) + (i * (tamanho_botao + espaco)),
+              y: (tamanho_botao / 2) + (tamanho_botao + espaco_botao),
+              radius: tamanho_botao / 2,
+              fill: 'white',
+              stroke: 'black',
+              strokeWidth: 1,
+              id: 'b_0_' + i,
+            });
+            
+            teclado[0][i] = {};
+            teclado[0][i].btn = circle;
+            circle_pos = circle.getPosition();
+            teclado[0][i].open = get_label(labels_src[HOHNER_GC_OPEN[0][i]],0,i,'o', circle_pos.x, circle_pos.y + 5);
+            teclado[0][i].close = get_label(labels_src[HOHNER_GC_CLOSE[0][i]],0,i,'c', circle_pos.x, circle_pos.y - 30);
+            layer.add(circle);
+            espaco = espaco_botao;
+        }
 
-</script>
+        for (i=0; i<botoes_linha_0; i++) {
+            layer.add(teclado[0][i].open);
+            layer.add(teclado[0][i].close);
+        }
 
-</body>
+        var espaco = 0;
+        for (i=0; i<botoes_linha_1; i++) {
+            var circle = new Kinetic.Circle({
+              x: 1 + tamanho_botao + (i * (tamanho_botao + espaco)),
+              y: (tamanho_botao / 2) + (2 * espaco_botao),
+              radius: tamanho_botao / 2,
+              fill: 'white',
+              stroke: 'black',
+              strokeWidth: 1,
+              id: 'b_1_' + i,
+            });
+
+            teclado[1][i] = {};
+            teclado[1][i].btn = circle;
+            circle_pos = circle.getPosition();
+            teclado[1][i].open = get_label(labels_src[HOHNER_GC_OPEN[1][i]],1,i,'o', circle_pos.x, circle_pos.y + 5);
+            teclado[1][i].close = get_label(labels_src[HOHNER_GC_CLOSE[1][i]],1,i,'c', circle_pos.x, circle_pos.y - 30);
+            layer.add(circle);
+            espaco = espaco_botao;
+        }
+
+        for (i=0; i<botoes_linha_1; i++) {
+            layer.add(teclado[1][i].open);
+            layer.add(teclado[1][i].close);
+        }
+
+        // add the layer to the stage
+        stage.add(layer);
+        populate_chord_table();
+
+    </script>
+
+  </body>
 </html>
+
