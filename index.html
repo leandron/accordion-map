@@ -50,12 +50,12 @@
         </div>
         <h3>Teclado</h3>
         <div class="span12">
-          <div class="span6">
+          <div class="span5">
               <button id="sub_half_tone" class="btn btn-success"><i class="icon-circle-arrow-down icon-white"></i> &frac12; tom</button>
               <button id="add_half_tone" class="btn btn-success"><i class="icon-circle-arrow-up icon-white"></i> &frac12; tom</button>
               <button id="change_labels" class="btn btn-success"><i class="icon-globe icon-white"></i> Mudar símbolos</button>
           </div>
-          <div class="span4">
+          <div class="span6">
               <table class="table table-bordered">
                 <tr>
                   <td>Afinação</td><td><span class="label label-success" id="afinacao">G/C</span></td>
@@ -123,7 +123,7 @@
                 x: param_x - (tamanho_botao / 2),
                 y: param_y,
                 text: param_text,
-                fontSize: 30,
+                fontSize: 28,
                 fontFamily: 'Arial',
                 id: 'l_' + param_row + '_' + param_column + '_' + param_open_close,
                 fill: 'black',
@@ -144,8 +144,9 @@
 
         function set_chord(chord_no, var_no) {
             clean_keyboard();
-            $('#acorde').text(labels_src[chords[chord_no][0]] + chords[chord_no][1]);
             selected_chord = chord_no;
+            acorde_lbl = labels_src[((chords[selected_chord][0] + current_tone_adjust) % labels_src.length) ];
+            $('#acorde').text(acorde_lbl + chords[selected_chord][1]);
             note_list = chords[chord_no][c_variations][var_no][1];
 
             if (chords[chord_no][c_variations][var_no][0] == CLOSE) {
@@ -163,9 +164,7 @@
             }
             layer.draw();
 
-            if (selected_chord != -1) {
-                $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
-            }
+
         }
 
         function clean_keyboard() {
@@ -204,6 +203,10 @@
           txt_label_afinacao1 = labels_src[((TOM1 + tone_adjust) % labels_src.length) ];
           txt_label_afinacao2 = labels_src[((TOM2 + tone_adjust) % labels_src.length) ];
           $('#afinacao').text(txt_label_afinacao1 + '/' + txt_label_afinacao2);
+
+          if (selected_chord != -1) {
+              $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
+          }
 
         }
 
