@@ -162,6 +162,10 @@
                 func_mark(note_list[i][0], note_list[i][1]);
             }
             layer.draw();
+
+            if (selected_chord != -1) {
+                $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
+            }
         }
 
         function clean_keyboard() {
@@ -201,9 +205,6 @@
           txt_label_afinacao2 = labels_src[((TOM2 + tone_adjust) % labels_src.length) ];
           $('#afinacao').text(txt_label_afinacao1 + '/' + txt_label_afinacao2);
 
-          if (selected_chord != -1) {
-              $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
-          }
         }
 
         function populate_chord_table() {
