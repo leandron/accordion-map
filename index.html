@@ -66,7 +66,7 @@
                   <td>Afinação</td><td><span class="label label-success" id="afinacao">G/C</span></td>
                   <td>Acorde</td>
                   <td>
-                    <span class="label label-success" id="acorde">-- </span>
+                    <span class="label label-success" id="acorde">--</span>
                     <i id="abre_fole" class="icon-resize-full"></i>
                     <i id="fecha_fole" class="icon-resize-small"></i>
                     
@@ -156,7 +156,7 @@
             clean_keyboard();
             selected_chord = chord_no;
             acorde_lbl = labels_src[((chords[selected_chord][0] + current_tone_adjust) % labels_src.length) ];
-            $('#acorde').text(acorde_lbl + chords[selected_chord][1]);
+            $('#acorde').html(acorde_lbl + chords[selected_chord][1]);
             note_list = chords[chord_no][c_variations][var_no][1];
 
             if (chords[chord_no][c_variations][var_no][0] == CLOSE) {
@@ -205,7 +205,7 @@
 
           for (var c=0; c < chords.length; c++) {
               chord_lbl = labels_src[((chords[c][0] + tone_adjust) % labels_src.length) ]
-              $('#chord_' + c).text(chord_lbl + chords[c][1]);
+              $('#chord_' + c).html(chord_lbl + chords[c][1]);
           }
 
           // ajusta o label com a afinacao
@@ -214,7 +214,7 @@
           $('#afinacao').text(txt_label_afinacao1 + '/' + txt_label_afinacao2);
 
           if (selected_chord != -1) {
-              $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
+              $('#acorde').html(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
           }
 
           for (var c=0; c < POPULAR_TONES.length; c++) {
