@@ -18,6 +18,7 @@ br_tone = ['Dó', 'Dó#', 'Ré', 'Ré#', 'Mi', 'Fá', 'Fá#', 'Sol', 'Sol#', 'L�
 
 HOHNER_GC_OPEN =  [[D, Fs, A, C, E, Fs, A, C, E, Fs, A], [G, B, D, F, G, B, D, F, G, B]];
 HOHNER_GC_CLOSE = [[B, D,  G, B, D, G,  B, D, G, B,  D], [E, G, C, E, G, C, E, G, C, E]];
+POPULAR_TONES = [[G,C,60],[C,F,65],[A,D,74]]; // o numero indica o ajuste de tom
 HOHNER_GC = [HOHNER_GC_OPEN, HOHNER_GC_CLOSE]
 
 OPEN = 0;

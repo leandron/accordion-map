@@ -50,12 +50,17 @@
         </div>
         <h3>Teclado</h3>
         <div class="span12">
-          <div class="span5">
-              <button id="sub_half_tone" class="btn btn-success"><i class="icon-circle-arrow-down icon-white"></i> &frac12; tom</button>
-              <button id="add_half_tone" class="btn btn-success"><i class="icon-circle-arrow-up icon-white"></i> &frac12; tom</button>
+          <div class="span6">
+              <div class="btn-group">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">Afinações <span class="caret"></span></button>
+                <ul class="dropdown-menu" id="opcoes_afinacao">
+                </ul>
+              </div>
+              <button id="sub_half_tone" class="btn btn-success" title="reduzir meio tom"><i class="icon-circle-arrow-down icon-white"></i> &frac12;</button>
+              <button id="add_half_tone" class="btn btn-success" title="aumentar meio tom"><i class="icon-circle-arrow-up icon-white"></i> &frac12;</button>
               <button id="change_labels" class="btn btn-success"><i class="icon-globe icon-white"></i> Mudar símbolos</button>
           </div>
-          <div class="span6">
+          <div class="span5">
               <table class="table table-bordered">
                 <tr>
                   <td>Afinação</td><td><span class="label label-success" id="afinacao">G/C</span></td>
@@ -75,10 +80,9 @@
         <div class="span12" id="teclado">
         </div>
 
-        <h3><a name="acordes"></a>Acordes</h3>
+        <h3><a name="acordes"></a>Acordes no Teclado</h3>
         <table id="chords_table" class="table table-striped">
           <tr><td><strong>Acorde</strong></td><td><strong>Variação</strong></td></tr>
-          
         </table>
 
     </div> <!-- /container -->
@@ -91,6 +95,7 @@
     <script src="js/jquery.min.js"></script>
     <script type="text/javascript" src="js/kinetic-v4.5.4.min.js"></script>
     <script type="text/javascript" src="js/buttons.js"></script>
+    <script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
 
     <script type="text/javascript">
         var tamanho_botao = 80;
@@ -117,6 +122,11 @@
             current_tone_adjust++;
             redraw_keyboard(current_tone_adjust);
         });
+
+        function set_pop_tone(tone) {
+            current_tone_adjust = POPULAR_TONES[tone][2];
+            redraw_keyboard(current_tone_adjust);
+        }
 
         function get_label(param_text, param_row, param_column, param_open_close, param_x, param_y) {
             return new Kinetic.Text({
@@ -164,7 +174,6 @@
             }
             layer.draw();
 
-
         }
 
         function clean_keyboard() {
@@ -208,6 +217,13 @@
               $('#acorde').text(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
           }
 
+          for (var c=0; c < POPULAR_TONES.length; c++) {
+              current_tone = POPULAR_TONES;
+              lbl_t1 = labels_src[((current_tone[c][0]) % labels_src.length) ];
+              lbl_t2 = labels_src[((current_tone[c][1]) % labels_src.length) ];
+              $('#pop_tone_'+ c).text(lbl_t1 + '/' + lbl_t2);
+          }
+
         }
 
         function populate_chord_table() {
@@ -232,6 +248,18 @@
 
                 $('#chords_table').append(chord_str);
             }
+        }
+
+        function populate_popular_tones() {
+            var tones_str = '';
+            for (var c=0; c < POPULAR_TONES.length; c++) {
+                current_tone = POPULAR_TONES;
+                lbl_t1 = labels_src[((current_tone[c][0]) % labels_src.length) ];
+                lbl_t2 = labels_src[((current_tone[c][1]) % labels_src.length) ];
+                tones_str += '<li><a href="#" id="pop_tone_'+ c +'" onclick="set_pop_tone('+ c +')">' + lbl_t1 + '/' + lbl_t2 + '</a></li>';
+            }
+
+            $('#opcoes_afinacao').append(tones_str);
         }
 
         var stage = new Kinetic.Stage({
@@ -303,6 +331,7 @@
         // add the layer to the stage
         stage.add(layer);
         populate_chord_table();
+        populate_popular_tones();
 
     </script>
 
