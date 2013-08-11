@@ -1,0 +1,349 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Mapa do Acordeon Diatônico - 21 botões</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A reference map for diatonic accordion">
+    <meta name="author" content="Leandro Nunes">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      body {
+        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+      }
+    </style>
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="brand" href="index.html"> <img src="img/mini.png"> Mapa do Acordeon Diatônico</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li><a href="#">Modelos</a></li>
+              <li><a href="about.html">Sobre</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+        <h2>21 Botões</h2>
+        <div class="span12">
+          <div class="span6">
+              <div class="btn-group">
+                <button class="btn btn-success dropdown-toggle" data-toggle="dropdown">Afinações <span class="caret"></span></button>
+                <ul class="dropdown-menu" id="opcoes_afinacao">
+                </ul>
+              </div>
+              <button id="sub_half_tone" class="btn btn-success" title="reduzir meio tom"><i class="icon-circle-arrow-down icon-white"></i> &frac12;</button>
+              <button id="add_half_tone" class="btn btn-success" title="aumentar meio tom"><i class="icon-circle-arrow-up icon-white"></i> &frac12;</button>
+              <button id="change_labels" class="btn btn-success"><i class="icon-globe icon-white"></i> Mudar símbolos</button>
+          </div>
+          <div class="span5">
+              <table class="table table-bordered">
+                <tr>
+                  <td>Afinação</td><td><span class="label label-success" id="afinacao">G/C</span></td>
+                  <td>Acorde</td>
+                  <td>
+                    <span class="label label-success" id="acorde">--</span>
+                    <i id="abre_fole" class="icon-resize-full"></i>
+                    <i id="fecha_fole" class="icon-resize-small"></i>
+                    
+                    
+                  </td>
+                </tr>
+              </table>
+          </div>
+        </div>
+
+        <div class="span12" id="teclado">
+        </div>
+
+        <h3><a name="acordes"></a>Acordes no Teclado</h3>
+        <table id="chords_table" class="table table-striped">
+          <tr><td><strong>Acorde</strong></td><td><strong>Variação</strong></td></tr>
+        </table>
+
+    </div> <!-- /container -->
+
+    <footer style="text-align:center">
+<br />Esta obra é distribuida sob uma Licença <a rel="license" href="http://creativecommons.org/licenses/by/3.0/br/deed.pt_BR">Creative Commons Atribuição 3.0 Brasil</a>.</p>
+    </footer>
+
+    <script src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/kinetic-v4.5.4.min.js"></script>
+    <script type="text/javascript" src="js/buttons.js"></script>
+    <script type="text/javascript" src="js/bootstrap-dropdown.js"></script>
+
+    <script type="text/javascript">
+        var tamanho_botao = 80;
+        var espaco_botao = 4;
+        var labels_src = int_tone;
+        var current_tone_adjust = 60;
+        var botoes_linha_0 = 11;
+        var botoes_linha_1 = 10;
+        var TOM1 = G;
+        var TOM2 = C;
+        var selected_chord = -1;
+
+        $('#sub_half_tone').on('click', function () {
+            current_tone_adjust--;
+            redraw_keyboard(current_tone_adjust);
+        });
+
+        $('#change_labels').on('click', function () {
+            labels_src = labels_src == int_tone ? br_tone : int_tone;
+            redraw_keyboard(current_tone_adjust);
+        });
+
+        $('#add_half_tone').on('click', function () {
+            current_tone_adjust++;
+            redraw_keyboard(current_tone_adjust);
+        });
+
+        function set_pop_tone(tone) {
+            current_tone_adjust = POPULAR_TONES[tone][2];
+            redraw_keyboard(current_tone_adjust);
+        }
+
+        function get_label(param_text, param_row, param_column, param_open_close, param_x, param_y) {
+            return new Kinetic.Text({
+                x: param_x - (tamanho_botao / 2),
+                y: param_y,
+                text: param_text,
+                fontSize: 28,
+                fontFamily: 'Arial',
+                id: 'l_' + param_row + '_' + param_column + '_' + param_open_close,
+                fill: 'black',
+                width: tamanho_botao,
+                align: 'center',
+              });
+        }
+
+        function mark_button_up (row, button) {
+            teclado[row][button].btn.setFill('yellow');
+            teclado[row][button].close.setFill('red');
+        }
+
+        function mark_button_down (row, button) {
+            teclado[row][button].btn.setFill('yellow');
+            teclado[row][button].open.setFill('red');
+        }
+
+        function set_chord(chord_no, var_no) {
+            clean_keyboard();
+            selected_chord = chord_no;
+            acorde_lbl = labels_src[((chords[selected_chord][0] + current_tone_adjust) % labels_src.length) ];
+            $('#acorde').html(acorde_lbl + chords[selected_chord][1]);
+            note_list = chords[chord_no][c_variations][var_no][1];
+
+            if (chords[chord_no][c_variations][var_no][0] == CLOSE) {
+                $('#abre_fole').hide();
+                $('#fecha_fole').show();
+                func_mark = mark_button_up;
+            } else {
+                $('#abre_fole').show();
+                $('#fecha_fole').hide();
+                func_mark = mark_button_down;
+            }
+
+            for (i=0; i < note_list.length; i++) {
+                func_mark(note_list[i][0], note_list[i][1]);
+            }
+            layer.draw();
+
+        }
+
+        function clean_keyboard() {
+          for (i=0; i < botoes_linha_0; i++) {
+              teclado[0][i].btn.setFill('white');
+              teclado[0][i].open.setFill('black');
+              teclado[0][i].close.setFill('black');
+
+              if ( i < botoes_linha_1 ) {
+                  teclado[1][i].btn.setFill('white');
+                  teclado[1][i].open.setFill('black');
+                  teclado[1][i].close.setFill('black');
+              }
+          }
+          layer.draw();
+        }
+
+        function redraw_keyboard (tone_adjust) {
+          for (i=0; i < botoes_linha_0; i++) {
+              teclado[0][i].open.setText(labels_src[((HOHNER_GC_OPEN[0][i] + tone_adjust) % labels_src.length) ]);
+              teclado[0][i].close.setText(labels_src[((HOHNER_GC_CLOSE[0][i] + tone_adjust) % labels_src.length) ]);
+
+              if ( i < botoes_linha_1 ) {
+                  teclado[1][i].open.setText(labels_src[((HOHNER_GC_OPEN[1][i] + tone_adjust) % labels_src.length) ]);
+                  teclado[1][i].close.setText(labels_src[((HOHNER_GC_CLOSE[1][i] + tone_adjust) % labels_src.length) ]);
+              }
+          }
+          layer.draw();
+
+          for (var c=0; c < chords.length; c++) {
+              chord_lbl = labels_src[((chords[c][0] + tone_adjust) % labels_src.length) ]
+              $('#chord_' + c).html(chord_lbl + chords[c][1]);
+          }
+
+          // ajusta o label com a afinacao
+          txt_label_afinacao1 = labels_src[((TOM1 + tone_adjust) % labels_src.length) ];
+          txt_label_afinacao2 = labels_src[((TOM2 + tone_adjust) % labels_src.length) ];
+          $('#afinacao').text(txt_label_afinacao1 + '/' + txt_label_afinacao2);
+
+          if (selected_chord != -1) {
+              $('#acorde').html(labels_src[((chords[selected_chord][0] + tone_adjust) % labels_src.length) ]);
+          }
+
+          for (var c=0; c < POPULAR_TONES.length; c++) {
+              current_tone = POPULAR_TONES;
+              lbl_t1 = labels_src[((current_tone[c][0]) % labels_src.length) ];
+              lbl_t2 = labels_src[((current_tone[c][1]) % labels_src.length) ];
+              $('#pop_tone_'+ c).text(lbl_t1 + '/' + lbl_t2);
+          }
+
+        }
+
+        function populate_chord_table() {
+            for (var c=0; c < chords.length; c++) {
+                chord_str =  '<tr><td id="chord_'+ c +'">' + labels_src[chords[c][0]] + chords[c][1] + '</td><td>';
+
+                for (var v=0; v < chords[c][2].length; v++) {
+                    chord_str += '<button class="btn btn-';
+                    chord_str += chords[c][2][v][0] == OPEN ? 'success"' : 'warning"';
+                    chord_str += ' title="';
+                    chord_str += chords[c][2][v][0] == OPEN ? 'Abrindo o fole' : 'Fechando o fole';
+                    chord_str += '"" onclick="set_chord(' + c + ',' + v + ')" > ' + (v + 1) ;
+
+                    chord_str += ' <i class="';
+                    chord_str += chords[c][2][v][0] == OPEN ? 'icon-resize-full' : 'icon-resize-small';
+                    chord_str += ' icon-white"></i>';
+
+                    chord_str += " </button> ";
+                }
+
+                chord_str += '</td></tr>';
+
+                $('#chords_table').append(chord_str);
+            }
+        }
+
+        function populate_popular_tones() {
+            var tones_str = '';
+            for (var c=0; c < POPULAR_TONES.length; c++) {
+                current_tone = POPULAR_TONES;
+                lbl_t1 = labels_src[((current_tone[c][0]) % labels_src.length) ];
+                lbl_t2 = labels_src[((current_tone[c][1]) % labels_src.length) ];
+                tones_str += '<li><a href="#" id="pop_tone_'+ c +'" onclick="set_pop_tone('+ c +')">' + lbl_t1 + '/' + lbl_t2 + '</a></li>';
+            }
+
+            $('#opcoes_afinacao').append(tones_str);
+        }
+
+        var stage = new Kinetic.Stage({
+          container: 'teclado',
+          width: ((botoes_linha_0 * tamanho_botao) + (9 * espaco_botao)) + 10,
+          height: ((2 * tamanho_botao) + espaco_botao) + 10
+        });
+
+        var layer = new Kinetic.Layer();
+
+        $('#abre_fole').hide();
+        $('#fecha_fole').hide();
+
+        var teclado = new Array();
+        teclado = [new Array(botoes_linha_0), new Array(9)]
+
+        var espaco = 0;
+        for (i=0; i<botoes_linha_0; i++) {
+            var circle = new Kinetic.Circle({
+              x: 1 + (tamanho_botao / 2) + (i * (tamanho_botao + espaco)),
+              y: (tamanho_botao / 2) + (tamanho_botao + espaco_botao),
+              radius: tamanho_botao / 2,
+              fill: 'white',
+              stroke: 'black',
+              strokeWidth: 1,
+              id: 'b_0_' + i,
+            });
+            
+            teclado[0][i] = {};
+            teclado[0][i].btn = circle;
+            circle_pos = circle.getPosition();
+            teclado[0][i].open = get_label(labels_src[HOHNER_GC_OPEN[0][i]],0,i,'o', circle_pos.x, circle_pos.y + 5);
+            teclado[0][i].close = get_label(labels_src[HOHNER_GC_CLOSE[0][i]],0,i,'c', circle_pos.x, circle_pos.y - 30);
+            layer.add(circle);
+            espaco = espaco_botao;
+        }
+
+        for (i=0; i<botoes_linha_0; i++) {
+            layer.add(teclado[0][i].open);
+            layer.add(teclado[0][i].close);
+        }
+
+        var espaco = 0;
+        for (i=0; i<botoes_linha_1; i++) {
+            var circle = new Kinetic.Circle({
+              x: 1 + tamanho_botao + (i * (tamanho_botao + espaco)),
+              y: (tamanho_botao / 2) + (2 * espaco_botao),
+              radius: tamanho_botao / 2,
+              fill: 'white',
+              stroke: 'black',
+              strokeWidth: 1,
+              id: 'b_1_' + i,
+            });
+
+            teclado[1][i] = {};
+            teclado[1][i].btn = circle;
+            circle_pos = circle.getPosition();
+            teclado[1][i].open = get_label(labels_src[HOHNER_GC_OPEN[1][i]],1,i,'o', circle_pos.x, circle_pos.y + 5);
+            teclado[1][i].close = get_label(labels_src[HOHNER_GC_CLOSE[1][i]],1,i,'c', circle_pos.x, circle_pos.y - 30);
+            layer.add(circle);
+            espaco = espaco_botao;
+        }
+
+        for (i=0; i<botoes_linha_1; i++) {
+            layer.add(teclado[1][i].open);
+            layer.add(teclado[1][i].close);
+        }
+
+        // add the layer to the stage
+        stage.add(layer);
+        populate_chord_table();
+        populate_popular_tones();
+
+    </script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-4797390-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+  </body>
+</html>
+
