@@ -31,13 +31,6 @@
           <a class="brand" href="index.html"><img style="padding:0;" src="img/mini.png"> Mapa do Acordeon Diatônico</a>
           <div class="nav-collapse collapse">
             <ul class="nav">
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Mapas</a>
-                <ul class="dropdown-menu">
-                  <li><a href="diatonic21.html">21 botões</a></li>
-                  <li><a href="diatonic30.html">30 botões</a></li>
-                </ul>
-              </li> 
               <li><a href="about.html">Sobre</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -46,7 +39,6 @@
     </div>
 
     <div class="container">
-        <h2>21 Botões</h2>
         <div class="span12">
           <div class="span6">
               <div class="btn-group">
@@ -228,7 +220,7 @@
                 chord_str =  '<tr><td id="chord_'+ c +'">' + labels_src[chords[c][0]] + chords[c][1] + '</td><td>';
 
                 for (var v=0; v < chords[c][2].length; v++) {
-                    chord_str += '<button class="btn btn-';
+                    chord_str += '<button class="btn btn-small btn-';
                     chord_str += chords[c][2][v][0] == OPEN ? 'success"' : 'warning"';
                     chord_str += ' title="';
                     chord_str += chords[c][2][v][0] == OPEN ? 'Abrindo o fole' : 'Fechando o fole';
